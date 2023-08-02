@@ -15,73 +15,61 @@
 
 #include "HostCommunications.h"
 
-HostCommunications::HostCommunications()
-{
+HostCommunications::HostCommunications() {}
+
+HostCommunications::~HostCommunications() {}
+
+void HostCommunications::initialize(int stage) {
+    UdpBasicApp::initialize(stage);
+    if (stage == INITSTAGE_LAST) {
+        InterfaceTable* t = dynamic_cast<InterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
+        wlanInterfaceId = t->getInterfaceByName("wlan0")->getInterfaceId();
+    }
 }
 
-HostCommunications::~HostCommunications()
-{
+void HostCommunications::sendPacket(Packet* packet, L3Address addr) {
+    emit(packetSentSignal, packet);
+    packet->addTag<InterfaceReq>()->setInterfaceId(wlanInterfaceId);
+    socket.sendTo(packet, addr, destPort);
+    numSent++;
+    stats.effectiveNbWifiMessages++;
 }
 
-void HostCommunications::initialize(int stage)
-{
-	UdpBasicApp::initialize(stage);
-	if (stage == INITSTAGE_LAST)
-	{
-		InterfaceTable* t = dynamic_cast<InterfaceTable*>(getModuleByPath(par("interfaceTableModule")));
-		wlanInterfaceId = t->getInterfaceByName("wlan0")->getInterfaceId();
-	}
+L3Address HostCommunications::getMSSAdress(unsigned int stationId) {
+    L3Address result;
+    L3AddressResolver().tryResolve(("Stations[" + to_string(stationId) + "]").c_str(), result);
+    if (result.isUnspecified())
+        EV_ERROR << "cannot resolve destination address : "
+                 << "Stations[" + to_string(stationId) + "]" << endl;
+    return result;
 }
 
-void HostCommunications::sendPacket(Packet* packet, L3Address addr)
-{
-	emit(packetSentSignal, packet);
-	packet->addTag<InterfaceReq>()->setInterfaceId(wlanInterfaceId);
-	socket.sendTo(packet, addr, destPort);
-	numSent++;
-	stats.effectiveNbWifiMessages++;
+unsigned int HostCommunications::computeClosestMSS(unsigned int idMobileHost, unsigned int nbMobileSupportStations) {
+    Coord MH = getCoordinates<LinearMobilityInsideCells>("Mobiles[" + to_string(idMobileHost) + "]");
+    double minDistance = computeDistance(MH, getCoordinates<LinearMobility>("Stations[0]"));
+    unsigned int minId = 0;
+    double distance = 0;
+    for (unsigned int i = 1; i < nbMobileSupportStations; i++) {
+        distance = computeDistance(MH, getCoordinates<LinearMobility>("Stations[" + to_string(i) + "]"));
+        if (distance < minDistance) {
+            minDistance = distance;
+            minId = i;
+        }
+    }
+    if (minDistance > 120)
+        std::cerr << "MH " << idMobileHost << " outside any cell" << endl;
+    return minId;
 }
 
-L3Address HostCommunications::getMSSAdress(unsigned int stationId)
-{
-	L3Address result;
-	L3AddressResolver().tryResolve(("Stations[" + to_string(stationId) + "]").c_str(), result);
-	if (result.isUnspecified())
-		EV_ERROR << "cannot resolve destination address : " << "Stations[" + to_string(stationId) + "]" << endl;
-	return result;
+template <typename MobilityModel>
+Coord HostCommunications::getCoordinates(const string& name) {
+    cModule* mod = getModuleByPath(name.c_str());
+    MobilityModel* mob = dynamic_cast<MobilityModel*>(mod->getSubmodule("mobility"));
+    return mob->getCurrentPosition();
 }
 
-unsigned int HostCommunications::computeClosestMSS(unsigned int idMobileHost, unsigned int nbMobileSupportStations)
-{
-	Coord MH = getCoordinates<LinearMobilityInsideCells>("Mobiles[" + to_string(idMobileHost) + "]");
-	double minDistance = computeDistance(MH, getCoordinates<LinearMobility>("Stations[0]"));
-	unsigned int minId = 0;
-	double distance = 0;
-	for (unsigned int i = 1; i < nbMobileSupportStations; i++)
-	{
-		distance = computeDistance(MH, getCoordinates<LinearMobility>("Stations[" + to_string(i) + "]"));
-		if (distance < minDistance)
-		{
-			minDistance = distance;
-			minId = i;
-		}
-	}
-	if (minDistance > 120)
-		std::cerr << "MH " << idMobileHost << " outside any cell" << endl;
-	return minId;
-}
-
-template<typename MobilityModel>
-Coord HostCommunications::getCoordinates(const string& name)
-{
-	cModule *mod = getModuleByPath(name.c_str());
-	MobilityModel *mob = dynamic_cast<MobilityModel*>(mod->getSubmodule("mobility"));
-	return mob->getCurrentPosition();
-}
-
-double HostCommunications::computeDistance(const Coord& c1, const Coord& c2)
-{
-	double hdistance = c1.x - c2.x;
-	double vdistance = c1.y - c2.y;
-	return sqrt(hdistance * hdistance + vdistance * vdistance);
+double HostCommunications::computeDistance(const Coord& c1, const Coord& c2) {
+    double hdistance = c1.x - c2.x;
+    double vdistance = c1.y - c2.y;
+    return sqrt(hdistance * hdistance + vdistance * vdistance);
 }

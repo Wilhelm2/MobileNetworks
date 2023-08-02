@@ -15,48 +15,42 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "inet/common/INETDefs.h"
+#include "OpenSocketMap.h"
 #include "inet/applications/common/SocketTag_m.h"
+#include "inet/common/INETDefs.h"
 #include "inet/common/packet/Message.h"
 #include "inet/common/packet/Packet.h"
-#include "OpenSocketMap.h"
 
-TcpSocket *OpenSocketMap::findSocketFor(cMessage *msg)
-{
-	auto& tags = getTags(msg);
-	int connId = tags.getTag<SocketInd>()->getSocketId();
-	auto i = socketMap.find(connId);
-	ASSERT(i == socketMap.end() || i->first == i->second->getSocketId());
-	return (i == socketMap.end()) ? nullptr : i->second;
+TcpSocket* OpenSocketMap::findSocketFor(cMessage* msg) {
+    auto& tags = getTags(msg);
+    int connId = tags.getTag<SocketInd>()->getSocketId();
+    auto i = socketMap.find(connId);
+    ASSERT(i == socketMap.end() || i->first == i->second->getSocketId());
+    return (i == socketMap.end()) ? nullptr : i->second;
 }
 
-void OpenSocketMap::addSocket(TcpSocket *socket)
-{
-	ASSERT(socketMap.find(socket->getSocketId()) == socketMap.end());
-	socketMap[socket->getSocketId()] = socket;
+void OpenSocketMap::addSocket(TcpSocket* socket) {
+    ASSERT(socketMap.find(socket->getSocketId()) == socketMap.end());
+    socketMap[socket->getSocketId()] = socket;
 }
 
-TcpSocket *OpenSocketMap::removeSocket(TcpSocket *socket)
-{
-	auto i = socketMap.find(socket->getSocketId());
-	if (i != socketMap.end())
-		socketMap.erase(i);
-	return socket;
+TcpSocket* OpenSocketMap::removeSocket(TcpSocket* socket) {
+    auto i = socketMap.find(socket->getSocketId());
+    if (i != socketMap.end())
+        socketMap.erase(i);
+    return socket;
 }
 
-void OpenSocketMap::deleteSockets()
-{
-	for (auto & elem : socketMap)
-		delete elem.second;
-	socketMap.clear();
+void OpenSocketMap::deleteSockets() {
+    for (auto& elem : socketMap)
+        delete elem.second;
+    socketMap.clear();
 }
 
-std::map<int, TcpSocket *>::iterator OpenSocketMap::begin()
-{
-	return socketMap.begin();
+std::map<int, TcpSocket*>::iterator OpenSocketMap::begin() {
+    return socketMap.begin();
 }
 
-std::map<int, TcpSocket *>::iterator OpenSocketMap::end()
-{
-	return socketMap.end();
+std::map<int, TcpSocket*>::iterator OpenSocketMap::end() {
+    return socketMap.end();
 }

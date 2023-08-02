@@ -15,48 +15,37 @@
 
 #include "MHSBuffer.h"
 
-MHSBuffer::MHSBuffer()
-{
+MHSBuffer::MHSBuffer() {}
+
+MHSBuffer::~MHSBuffer() {}
+
+struct s_sendMsgMH MHSBuffer::searchMsg(unsigned int seq) {
+    for (struct s_sendMsgMH& it : buffer) {
+        if (it.seqh == seq)
+            return it;
+    }
+    cerr << "Message " << seq << " not found" << endl;
+    exit(1);
 }
 
-MHSBuffer::~MHSBuffer()
-{
+void MHSBuffer::push_back(struct s_sendMsgMH msg) {
+    buffer.push_back(msg);
 }
 
-struct s_sendMsgMH MHSBuffer::searchMsg(unsigned int seq)
-{
-	for (struct s_sendMsgMH& it : buffer)
-	{
-		if (it.seqh == seq)
-			return it;
-	}
-	cerr << "Message " << seq << " not found" << endl;
-	exit(1);
+vector<cMessage*> MHSBuffer::ackMessages(unsigned int seqACK) {
+    vector<cMessage*> timeoutsToCancel;
+    std::list<struct s_sendMsgMH>::iterator it = buffer.begin();
+    while (it != buffer.end() && it->seqh <= seqACK) {
+        timeoutsToCancel.push_back(it->timeout);
+        it++;
+    }
+    buffer.erase(buffer.begin(), it);
+    return timeoutsToCancel;
 }
 
-void MHSBuffer::push_back(struct s_sendMsgMH msg)
-{
-	buffer.push_back(msg);
+vector<cMessage*> MHSBuffer::getTimeouts() {
+    vector<cMessage*> timeouts;
+    for (struct s_sendMsgMH& m : buffer)
+        timeouts.push_back(m.timeout);
+    return timeouts;
 }
-
-vector<cMessage*> MHSBuffer::ackMessages(unsigned int seqACK)
-{
-	vector<cMessage*> timeoutsToCancel;
-	std::list<struct s_sendMsgMH>::iterator it = buffer.begin();
-	while (it != buffer.end() && it->seqh <= seqACK)
-	{
-		timeoutsToCancel.push_back(it->timeout);
-		it++;
-	}
-	buffer.erase(buffer.begin(), it);
-	return timeoutsToCancel;
-}
-
-vector<cMessage*> MHSBuffer::getTimeouts()
-{
-	vector<cMessage*> timeouts;
-	for (struct s_sendMsgMH& m : buffer)
-		timeouts.push_back(m.timeout);
-	return timeouts;
-}
-

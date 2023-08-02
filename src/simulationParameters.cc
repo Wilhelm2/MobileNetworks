@@ -17,31 +17,28 @@
 
 Define_Module(SimulationParameters);
 
-void SimulationParameters::initialize()
-{
-	nbMobileHosts = par("nbMobileHosts");
-	nbMobileSupportStations = par("nbMobileSupportStations");
-	SaveInterval = par("SaveInterval");
-	AppMFrequency = par("AppMFrequency");
+void SimulationParameters::initialize() {
+    nbMobileHosts = par("nbMobileHosts");
+    nbMobileSupportStations = par("nbMobileSupportStations");
+    SaveInterval = par("SaveInterval");
+    AppMFrequency = par("AppMFrequency");
 }
 
-simtime_t SimulationParameters::determineFirstSendTimeInMs(unsigned int id)
-{
-	float nodeWillBroadcastAt = AppMFrequency * ((float) id) / nbMobileHosts * 1000000; // necessary because SimTime only takes int as argument
-	std::cerr << "Node " << id << " will send first message at " << SimTime(nodeWillBroadcastAt, SIMTIME_US)
-			<< std::endl;
-	return SimTime(nodeWillBroadcastAt, SIMTIME_US);
+simtime_t SimulationParameters::determineFirstSendTimeInMs(unsigned int id) {
+    float nodeWillBroadcastAt =
+        AppMFrequency * ((float)id) / nbMobileHosts * 1000000;  // necessary because SimTime only takes int as argument
+    std::cerr << "Node " << id << " will send first message at " << SimTime(nodeWillBroadcastAt, SIMTIME_US)
+              << std::endl;
+    return SimTime(nodeWillBroadcastAt, SIMTIME_US);
 }
 
-simtime_t SimulationParameters::getRandTime(simtime_t interval)
-{
-	return interval + SimTime((variable)(generatorSendDistribution), SIMTIME_US);
+simtime_t SimulationParameters::getRandTime(simtime_t interval) {
+    return interval + SimTime((variable)(generatorSendDistribution), SIMTIME_US);
 }
 
-simtime_t SimulationParameters::checkPositif(simtime_t t)
-{
-	simtime_t tmp = SimTime(100, SIMTIME_US);
-	while (t < 0)
-		t += tmp;
-	return t;
+simtime_t SimulationParameters::checkPositif(simtime_t t) {
+    simtime_t tmp = SimTime(100, SIMTIME_US);
+    while (t < 0)
+        t += tmp;
+    return t;
 }

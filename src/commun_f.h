@@ -17,23 +17,18 @@ using namespace std;
 
 using namespace omnetpp;
 
-typedef struct s_idMsg
-{
-	unsigned int idMH;
-	unsigned int seqMH;
+typedef struct s_idMsg {
+    unsigned int idMH;
+    unsigned int seqMH;
 } idMsg;
 
-typedef struct s_interval
-{
-	unsigned int begin;
-	unsigned int end;
-	bool contains(unsigned int seq) const
-	{
-		return seq >= begin && seq <= end;
-	}
+typedef struct s_interval {
+    unsigned int begin;
+    unsigned int end;
+    bool contains(unsigned int seq) const { return seq >= begin && seq <= end; }
 } AckInterval;
 
-#define ID_EQ(id1,id2) (id1.idMH == id2.idMH && id1.seqMH == id2.seqMH)
+#define ID_EQ(id1, id2) (id1.idMH == id2.idMH && id1.seqMH == id2.seqMH)
 
 #define PACKAGE_NAME "Arbre"
 

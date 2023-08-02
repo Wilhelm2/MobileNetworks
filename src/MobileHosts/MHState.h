@@ -17,25 +17,21 @@
 #define MOBILEHOSTS_MHSTATE_H_
 
 // Class to represent the state of a host
-class MHState
-{
-public:
-	enum class STATE
-	{
-		Join, Init, Connecting, ConnectionEstablished
-	};
+class MHState {
+   public:
+    enum class STATE { Join, Init, Connecting, ConnectionEstablished };
 
-	MHState();
-	virtual ~MHState();
-	void moveToNewCell();
-	bool isConnectionEstablished();
-	STATE getState();
-	void setConnectionToEstablished();
-	void setConnectionToConnecting();
-	bool isInitiatingConnection();
+    MHState();
+    virtual ~MHState();
+    void moveToNewCell();
+    bool isConnectionEstablished();
+    STATE getState();
+    void setConnectionToEstablished();
+    void setConnectionToConnecting();
+    bool isInitiatingConnection();
 
-private:
-	STATE state;
+   private:
+    STATE state;
 };
 
 #endif /* MOBILEHOSTS_MHSTATE_H_ */

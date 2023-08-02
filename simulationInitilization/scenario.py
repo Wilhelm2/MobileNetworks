@@ -1,5 +1,5 @@
 from random import randint,seed
-with open("./out/gcc-release/src/scenario.xml",'w+') as fp:
+with open("../out/gcc-release/src/scenario.xml",'w+') as fp:
 	j = 3
 	seed(10)
 	fp.write("<scenario>\n")

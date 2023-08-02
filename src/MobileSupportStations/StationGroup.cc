@@ -15,78 +15,61 @@
 
 #include "StationGroup.h"
 
-StationGroup::StationGroup()
-{
+StationGroup::StationGroup() {}
+
+StationGroup::~StationGroup() {}
+
+unsigned int StationGroup::size() const {
+    return group.size();
 }
 
-StationGroup::~StationGroup()
-{
+unsigned int& StationGroup::operator[](unsigned int index) {
+    return group[index];
 }
 
-unsigned int StationGroup::size() const
-{
-	return group.size();
+void StationGroup::initialize(unsigned int idMSS, unsigned int groupSize) {
+    for (unsigned int i = idMSS - (idMSS % groupSize); i < idMSS - (idMSS % groupSize) + groupSize; i++)
+        group.push_back(i);
+    groupResponsible = group[0];
+    lastMsgMSSb.resize(groupSize, 0);
+    mssUp.resize(groupSize, true);
 }
 
-unsigned int& StationGroup::operator[](unsigned int index)
-{
-	return group[index];
+void StationGroup::print() {
+    for (unsigned int i : group)
+        cout << i << " ";
+    cout << endl;
 }
 
-void StationGroup::initialize(unsigned int idMSS, unsigned int groupSize)
-{
-	for (unsigned int i = idMSS - (idMSS % groupSize); i < idMSS - (idMSS % groupSize) + groupSize; i++)
-		group.push_back(i);
-	groupResponsible = group[0];
-	lastMsgMSSb.resize(groupSize, 0);
-	mssUp.resize(groupSize, true);
+bool StationGroup::contains(unsigned int idMSS) {
+    return std::find(group.begin(), group.end(), idMSS) != group.end();
 }
 
-void StationGroup::print()
-{
-	for (unsigned int i : group)
-		cout << i << " ";
-	cout << endl;
+bool StationGroup::isGroupResponsible(unsigned int idMSS) {
+    return idMSS == groupResponsible;
 }
 
-bool StationGroup::contains(unsigned int idMSS)
-{
-	return std::find(group.begin(), group.end(), idMSS) != group.end();
+unsigned int StationGroup::getGroupResponsible() {
+    return groupResponsible;
 }
 
-bool StationGroup::isGroupResponsible(unsigned int idMSS)
-{
-	return idMSS == groupResponsible;
+void StationGroup::setGroupResponsible(unsigned int newResponsible) {
+    groupResponsible = newResponsible;
 }
 
-unsigned int StationGroup::getGroupResponsible()
-{
-	return groupResponsible;
+void StationGroup::updateLastMsgMSSb(unsigned int id) {
+    for (unsigned int i = 0; i < group.size(); i++) {
+        if (group[i] == id) {
+            lastMsgMSSb[i] = simTime();
+            mssUp[i] = true;
+        }
+    }
 }
 
-void StationGroup::setGroupResponsible(unsigned int newResponsible)
-{
-	groupResponsible = newResponsible;
+void StationGroup::setLastMsgMSSbCurrentTime() {
+    std::fill(lastMsgMSSb.begin(), lastMsgMSSb.end(), simTime());
 }
 
-void StationGroup::updateLastMsgMSSb(unsigned int id)
-{
-	for (unsigned int i = 0; i < group.size(); i++)
-	{
-		if (group[i] == id)
-		{
-			lastMsgMSSb[i] = simTime();
-			mssUp[i] = true;
-		}
-	}
-}
-
-void StationGroup::setLastMsgMSSbCurrentTime()
-{
-	std::fill(lastMsgMSSb.begin(), lastMsgMSSb.end(), simTime());
-}
-
-simtime_t StationGroup::getLastMessageTime(unsigned int source)
-{
-	return lastMsgMSSb[source];
+simtime_t StationGroup::getLastMessageTime(unsigned int source) {
+    return lastMsgMSSb[source];
 }

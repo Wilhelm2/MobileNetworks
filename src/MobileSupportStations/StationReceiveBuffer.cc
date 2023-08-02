@@ -15,32 +15,24 @@
 
 #include "StationReceiveBuffer.h"
 
-StationReceiveBuffer::StationReceiveBuffer()
-{
+StationReceiveBuffer::StationReceiveBuffer() {}
+
+StationReceiveBuffer::~StationReceiveBuffer() {}
+
+void StationReceiveBuffer::insert(const IntrusivePtr<const Apph_S>& m) {
+    list<idMsg>::iterator it = buffer.begin();
+    while (it != buffer.end() && it->seqMH < m->getId().seqMH)
+        it++;
+    buffer.insert(it, m->getId());
 }
 
-StationReceiveBuffer::~StationReceiveBuffer()
-{
-}
-
-void StationReceiveBuffer::insert(const IntrusivePtr<const Apph_S>& m)
-{
-	list<idMsg>::iterator it = buffer.begin();
-	while (it != buffer.end() && it->seqMH < m->getId().seqMH)
-		it++;
-	buffer.insert(it, m->getId());
-}
-
-bool StationReceiveBuffer::tryExtract(unsigned int seq, idMsg& container)
-{
-	for (list<idMsg>::iterator it = buffer.begin(); it != buffer.end(); it++)
-	{
-		if (it->seqMH == seq)
-		{
-			container = *it;
-			buffer.erase(it);
-			return true;
-		}
-	}
-	return false;
+bool StationReceiveBuffer::tryExtract(unsigned int seq, idMsg& container) {
+    for (list<idMsg>::iterator it = buffer.begin(); it != buffer.end(); it++) {
+        if (it->seqMH == seq) {
+            container = *it;
+            buffer.erase(it);
+            return true;
+        }
+    }
+    return false;
 }

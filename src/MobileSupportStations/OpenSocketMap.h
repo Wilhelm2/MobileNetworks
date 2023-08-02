@@ -27,62 +27,51 @@ using namespace inet;
 /**
  * Contains the TCP connections between stations
  */
-class OpenSocketMap
-{
+class OpenSocketMap {
+   public:
+    std::map<int, TcpSocket*> socketMap;  // must be pointers
 
-public:
-	std::map<int, TcpSocket *> socketMap; // must be pointers
+    OpenSocketMap() {}
 
-	OpenSocketMap()
-	{
-	}
+    /**
+     * Destructor does NOT delete the socket objects.
+     */
+    ~OpenSocketMap() {}
 
-	/**
-	 * Destructor does NOT delete the socket objects.
-	 */
-	~OpenSocketMap()
-	{
-	}
+    /**
+     * Finds the socket for the given message.
+     */
+    TcpSocket* findSocketFor(cMessage* msg);
 
-	/**
-	 * Finds the socket for the given message.
-	 */
-	TcpSocket *findSocketFor(cMessage *msg);
+    /**
+     * Adds the given socket.
+     */
+    void addSocket(TcpSocket* socket);
 
-	/**
-	 * Adds the given socket.
-	 */
-	void addSocket(TcpSocket *socket);
+    /**
+     * Removes the given socket.
+     */
+    TcpSocket* removeSocket(TcpSocket* socket);
 
-	/**
-	 * Removes the given socket.
-	 */
-	TcpSocket *removeSocket(TcpSocket *socket);
+    /**
+     * Returns the number of sockets stored.
+     */
+    unsigned int size() const { return socketMap.size(); }
 
-	/**
-	 * Returns the number of sockets stored.
-	 */
-	unsigned int size() const
-	{
-		return socketMap.size();
-	}
+    /**
+     * Deletes the socket objects.
+     */
+    void deleteSockets();
 
-	/**
-	 * Deletes the socket objects.
-	 */
-	void deleteSockets();
+    /**
+     * Returns an iterator to the begin of the map
+     */
+    std::map<int, TcpSocket*>::iterator begin();
 
-	/**
-	 * Returns an iterator to the begin of the map
-	 */
-	std::map<int, TcpSocket *>::iterator begin();
-
-	/**
-	 * Returns an iterator to the end of the map
-	 */
-	std::map<int, TcpSocket *>::iterator end();
-
+    /**
+     * Returns an iterator to the end of the map
+     */
+    std::map<int, TcpSocket*>::iterator end();
 };
 
 #endif /* OPENSOCKETMAP_H_ */
-

@@ -18,28 +18,28 @@
 
 #include "../commun_f.h"
 
-struct s_sendMsgMH
-{
-	unsigned int seqh;
-	cMessage* timeout;
+struct s_sendMsgMH {
+    unsigned int seqh;
+    cMessage* timeout;
 };
 
 // Sending buffer of hosts
-class MHSBuffer
-{
-public:
-	MHSBuffer();
-	virtual ~MHSBuffer();
-	// Searches for a message in the sending buffer. Terminates the program if the message is not contained (because it should and therefore means there is a bug)
-	struct s_sendMsgMH searchMsg(unsigned int seq);
-	void push_back(struct s_sendMsgMH msg);
-	// Acknowledges messages based on seqAck and returns the sending timeouts of those messages such that the host can cancel and delete them.
-	vector<cMessage*> ackMessages(unsigned int seqACK);
-	// Returns all message timeouts such that the host can cancel and delete them
-	vector<cMessage*> getTimeouts();
+class MHSBuffer {
+   public:
+    MHSBuffer();
+    virtual ~MHSBuffer();
+    // Searches for a message in the sending buffer. Terminates the program if the message is not contained (because it
+    // should and therefore means there is a bug)
+    struct s_sendMsgMH searchMsg(unsigned int seq);
+    void push_back(struct s_sendMsgMH msg);
+    // Acknowledges messages based on seqAck and returns the sending timeouts of those messages such that the host can
+    // cancel and delete them.
+    vector<cMessage*> ackMessages(unsigned int seqACK);
+    // Returns all message timeouts such that the host can cancel and delete them
+    vector<cMessage*> getTimeouts();
 
-	// Sending buffer
-	list<struct s_sendMsgMH> buffer;
+    // Sending buffer
+    list<struct s_sendMsgMH> buffer;
 };
 
 #endif /* MHSBuffer_H_ */

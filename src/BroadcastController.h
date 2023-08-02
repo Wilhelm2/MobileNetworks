@@ -16,63 +16,69 @@
 #ifndef BROADCASTCONTROLLER_H_
 #define BROADCASTCONTROLLER_H_
 
-#include <string.h>
 #include <omnetpp.h>
-#include <vector>
+#include <string.h>
 #include <stdexcept>
+#include <vector>
 #include "inet/applications/udpapp/UdpBasicApp.h"
 
-#include "simulationParameters.h"
 #include "commun_f.h"
+#include "simulationParameters.h"
 using namespace inet;
 using namespace std;
 
-typedef struct s_msg
-{
-	unsigned int seq; // sequence number of message given by mh
-	vector<unsigned int> clock; // message clock
-	unsigned int nbDeliv; // done deliveries
-	vector<bool> hasDelivered; // array used to notice multiple deliveries
-	simtime_t sendTime;
+typedef struct s_msg {
+    unsigned int seq;            // sequence number of message given by mh
+    vector<unsigned int> clock;  // message clock
+    unsigned int nbDeliv;        // done deliveries
+    vector<bool> hasDelivered;   // array used to notice multiple deliveries
+    simtime_t sendTime;
 } msgControl;
 
 // Module which is used to control that mobile hosts deliver messages in causal order
 // A station calls HostSystemJoin whenever a new host joins the system
 // A host calls hostNotifiesSendMessage whenever it broadcasts a message
 // A host calls deliverMessage whenever it delivers a message
-class BroadcastController: public cSimpleModule
-{
-public:
-	BroadcastController();
-	virtual ~BroadcastController();
-	virtual void initialize(int stage);
-	void handleMessage(cMessage *msg) override;
+class BroadcastController : public cSimpleModule {
+   public:
+    BroadcastController();
+    virtual ~BroadcastController();
+    virtual void initialize(int stage);
+    void handleMessage(cMessage* msg) override;
 
-	void HostSystemJoin(unsigned int id, unsigned int idMSS);
+    void HostSystemJoin(unsigned int id, unsigned int idMSS);
 
-	void hostNotifiesBroadcastMessage(idMsg id);
-	void deliverMessage(idMsg id, unsigned int idDest);
+    void hostNotifiesBroadcastMessage(idMsg id);
+    void deliverMessage(idMsg id, unsigned int idDest);
 
-	msgControl& searchMessage(vector<msgControl>& vecMessages, unsigned int seq);
-	bool satisfiesDeliveryConditions(const vector<unsigned int>& messageClock, const vector<unsigned int>& processClock,
-			unsigned int idSource);
-	bool entrySatisfiesDeliveryCondition(unsigned int index, unsigned int idSource, unsigned int toDeliverEntry,
-			unsigned int localVectorEntry);
-	void deleteMessage(idMsg id);
-	void DeliveryError(string errorReason, idMsg idM, unsigned int destProcess,
-			const vector<unsigned int>& messageClock, const vector<unsigned int>& processClock);
-	void printClock(const vector<unsigned int>& v);
-	void stationRemovesMessage(idMsg id, unsigned int idMSS);
+    msgControl& searchMessage(vector<msgControl>& vecMessages, unsigned int seq);
+    bool satisfiesDeliveryConditions(const vector<unsigned int>& messageClock,
+                                     const vector<unsigned int>& processClock,
+                                     unsigned int idSource);
+    bool entrySatisfiesDeliveryCondition(unsigned int index,
+                                         unsigned int idSource,
+                                         unsigned int toDeliverEntry,
+                                         unsigned int localVectorEntry);
+    void deleteMessage(idMsg id);
+    void DeliveryError(string errorReason,
+                       idMsg idM,
+                       unsigned int destProcess,
+                       const vector<unsigned int>& messageClock,
+                       const vector<unsigned int>& processClock);
+    void printClock(const vector<unsigned int>& v);
+    void stationRemovesMessage(idMsg id, unsigned int idMSS);
 
-	vector<vector<msgControl>> messages; // Each host has an assigned vector of messages it broadcasted
-	unsigned int totalDelivered = 0; // total message deliveries performed by hosts
-	simtime_t totalTimeDelivered = 0; // total message delivery delays, from a message broadcast to its delivery by hosts
+    vector<vector<msgControl>> messages;  // Each host has an assigned vector of messages it broadcasted
+    unsigned int totalDelivered = 0;      // total message deliveries performed by hosts
+    simtime_t totalTimeDelivered =
+        0;  // total message delivery delays, from a message broadcast to its delivery by hosts
 
-private:
-	vector<vector<unsigned int>> HostsClock;
-	vector<vector<unsigned int>> MSSClock; // Clock of the oldest message station i broadcasts. Kept to assign it to processes which join the system
+   private:
+    vector<vector<unsigned int>> HostsClock;
+    vector<vector<unsigned int>> MSSClock;  // Clock of the oldest message station i broadcasts. Kept to assign it to
+                                            // processes which join the system
 
-	SimulationParameters* params;
+    SimulationParameters* params;
 };
 
 Define_Module(BroadcastController);

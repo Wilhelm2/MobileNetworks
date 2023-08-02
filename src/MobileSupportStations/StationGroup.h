@@ -19,41 +19,40 @@
 #include "../commun_f.h"
 
 // Represents a group of stations
-class StationGroup
-{
-private:
-	// Contains the ids of station belonging to the group of stations
-	vector<unsigned int> group;
-	// Id of the station responsible of the group
-	unsigned int groupResponsible;
-	// Contains the timestamp of the last received message from each station of the group
-	vector<simtime_t> lastMsgMSSb;
-	// Tracks failures of the stations of the group. mssUp[i] = true means that group[i] is up.
-	vector<bool> mssUp;
+class StationGroup {
+   private:
+    // Contains the ids of station belonging to the group of stations
+    vector<unsigned int> group;
+    // Id of the station responsible of the group
+    unsigned int groupResponsible;
+    // Contains the timestamp of the last received message from each station of the group
+    vector<simtime_t> lastMsgMSSb;
+    // Tracks failures of the stations of the group. mssUp[i] = true means that group[i] is up.
+    vector<bool> mssUp;
 
-public:
-	StationGroup();
-	virtual ~StationGroup();
-	unsigned int size() const;
-	unsigned int& operator[](unsigned int index);
-	// Computes MSSb of idMSS following the number of stations by group of stations
-	void initialize(unsigned int idMSS, unsigned int groupSize);
-	// Prints the group
-	void print();
-	// Returns whether the group contains idMSS or not
-	bool contains(unsigned int idMSS);
-	// Returns whether idMSS is the group responsible or not
-	bool isGroupResponsible(unsigned int idMSS);
-	// Returns the id of the group responsible
-	unsigned int getGroupResponsible();
-	// Sets the group responsible
-	void setGroupResponsible(unsigned int newResponsible);
-	// Updates the most recent time in which the station received a message from station id
-	void updateLastMsgMSSb(unsigned int id);
-	// Sets all entries of last received message to current time
-	void setLastMsgMSSbCurrentTime();
-	// Gets last time where received a message from station source
-	simtime_t getLastMessageTime(unsigned int source);
+   public:
+    StationGroup();
+    virtual ~StationGroup();
+    unsigned int size() const;
+    unsigned int& operator[](unsigned int index);
+    // Computes MSSb of idMSS following the number of stations by group of stations
+    void initialize(unsigned int idMSS, unsigned int groupSize);
+    // Prints the group
+    void print();
+    // Returns whether the group contains idMSS or not
+    bool contains(unsigned int idMSS);
+    // Returns whether idMSS is the group responsible or not
+    bool isGroupResponsible(unsigned int idMSS);
+    // Returns the id of the group responsible
+    unsigned int getGroupResponsible();
+    // Sets the group responsible
+    void setGroupResponsible(unsigned int newResponsible);
+    // Updates the most recent time in which the station received a message from station id
+    void updateLastMsgMSSb(unsigned int id);
+    // Sets all entries of last received message to current time
+    void setLastMsgMSSbCurrentTime();
+    // Gets last time where received a message from station source
+    simtime_t getLastMessageTime(unsigned int source);
 };
 
 #endif /* MOBILESUPPORTSTATIONS_STATIONGROUP_H_ */

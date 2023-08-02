@@ -30,45 +30,38 @@ using namespace inet;
  * @ingroup mobility
  * @author Emin Ilker Cetinbas
  */
-class INET_API LinearMobilityInsideCells: public MovingMobilityBase
-{
-protected:
-	double speed;
+class INET_API LinearMobilityInsideCells : public MovingMobilityBase {
+   protected:
+    double speed;
 
-protected:
-	virtual int numInitStages() const override
-	{
-		return NUM_INIT_STAGES;
-	}
+   protected:
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
 
-	/** @brief Initializes mobility model parameters.*/
-	virtual void initialize(int stage) override;
+    /** @brief Initializes mobility model parameters.*/
+    virtual void initialize(int stage) override;
 
-	/** @brief Move the host*/
-	virtual void move() override;
-	virtual void orient() override;
+    /** @brief Move the host*/
+    virtual void move() override;
+    virtual void orient() override;
 
-	// Checks if the host is out of the area covered by stations
-	bool OutOfZone(Coord & velocity, double speed);
-	// Get the coordinates of the station name
-	Coord getStationCoordinates(string name);
-	// Computes the distance between two coordinates
-	double computeDistance(Coord c1, Coord c2);
+    // Checks if the host is out of the area covered by stations
+    bool OutOfZone(Coord& velocity, double speed);
+    // Get the coordinates of the station name
+    Coord getStationCoordinates(string name);
+    // Computes the distance between two coordinates
+    double computeDistance(Coord c1, Coord c2);
 
-public:
-	virtual double getMaxSpeed() const override
-	{
-		return speed;
-	}
-	LinearMobilityInsideCells();
-	virtual ~LinearMobilityInsideCells();
+   public:
+    virtual double getMaxSpeed() const override { return speed; }
+    LinearMobilityInsideCells();
+    virtual ~LinearMobilityInsideCells();
 
-	// Period at which the host changes direction
-	simtime_t directionUpdatePeriod;
-	// Last time the host changed direction
-	simtime_t lastDirectionUpdate;
-	// Access to simulations parameters
-	SimulationParameters* params;
+    // Period at which the host changes direction
+    simtime_t directionUpdatePeriod;
+    // Last time the host changed direction
+    simtime_t lastDirectionUpdate;
+    // Access to simulations parameters
+    SimulationParameters* params;
 };
 
 Define_Module(LinearMobilityInsideCells);
