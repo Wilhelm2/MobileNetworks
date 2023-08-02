@@ -25,7 +25,7 @@ We consider mobile networks composed of Mobile Hosts, denoted *host(s)*, and Sta
 Hosts and stations exclusively communicate through message passing.
 Hosts are the sources and destinations of application messages, and stations ensure that hosts receive and deliver messages causally.
 
-[Example of mobile network](readmeFigures/MobileNetworks.png)
+![Example of mobile network](readmeFigures/MobileNetworks.png?raw=true)
 
 The features of stations are the following:
 * Each station is at the center of a cell, corresponding to the area covered by its antenna's transmission range.
