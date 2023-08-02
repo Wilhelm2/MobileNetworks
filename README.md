@@ -16,7 +16,7 @@ Causal order ensures that any two causally related messages are delivered to app
 
 >**Causal order:** 
 >	Processes deliver messages while respecting the causal relation between them.
->	For any message $m$ and $m'$, if $m$ causally precedes $m'$, denoted $m\rightarrow m'$, then all processes deliver $m$ before $m'$:\
+>	For any message *m* and *m'*, if *m* causally precedes *m'*, denoted *m\rightarrow m'*, then all processes deliver *m* before *m'*:\
 >	<p align = "center">send(m) -> send(m') => deliver(m) -> deliver(m'). </p>
 
 # Mobile Networks
@@ -29,7 +29,7 @@ The features of stations are the following:
 * Each station is at the center of a cell, corresponding to the area covered by its antenna's transmission range.
 * Each station holds the causal information hosts connected to it require to deliver application messages in causal order.
 * Stations are subject to transient and permanent failures. A faulty station stops sending, receiving, and processing messages, and looses all data. 
-* To handle failures, stations are split into groups. Each station of a group $G$ stores a replica of the causal information stored by the other stations of $G$. If $|G|=f+1$ then $f$ stations of $G$ can be down simultaneously. Hence, $f$ is determined by the number of simultaneous station failures of a same group that should be tolerated. 
+* To handle failures, stations are split into groups. Each station of a group *G* stores a replica of the causal information stored by the other stations of *G*. If *|G|=f+1* then *f* stations of *G* can be down simultaneously. Hence, *f* is determined by the number of simultaneous station failures of a same group that should be tolerated. 
 * Stations are static, ie they do not move.
 * Stations have no energy limitations and have a much higher storage and computational capacity than hosts.
 
@@ -39,13 +39,12 @@ The features of hosts are the following:
 * Hosts move freely inside and outside cells.
 * Hosts have computational, storage, and energy limitations.
 * Hosts are subject to transient and permanent failures. For example, a host is temporarily faulty until its battery is recharged, or it is permanently faulty if it has a hardware failure.  A faulty host stops sending, receiving, processing messages, and it loses all variables it stored in volatile memory. 
-* Hosts have two states: \textit{up} and \textit{down}. Station control the state of hosts connected to them: A station considers a host connected to it as \textit{down} after not receiving any messages from the host for a given interval of time. Otherwise, the station considers the host as \textit{up}.	
+* Hosts have two states: *up* and *down*. Stations control the state of hosts connected to them: A station considers a host connected to it as *down* after not receiving any messages from the host for a given interval of time. Otherwise, the station considers the host as *up*.	
     
 The features of the network are the following:
 * The wireless network is considered unreliable due to interferences. The bandwidth of the wireless network is much lower than the bandwidth of a wired network. Hosts communicate with stations exclusively through the wireless network.  
-* The wired network is composed of FIFO communication channels without message losses. Nevertheless, wired channels can fail. Moreover, stations communicate over the wired network by using the algorithm proposed by Mostéfaoui~\cite{nedelecBreakingScalabilityBarrier2018}. Therefore, wired channels can be added and removed, as long as there exists a path of communication channels initialized by the algorithm~\cite{nedelecBreakingScalabilityBarrier2018}.  
+* The wired network is composed of FIFO communication channels without message losses. Nevertheless, wired channels can fail. Moreover, stations communicate over the wired network by using the algorithm proposed by Mostéfaoui[[2]](https://dblp.org/rec/journals/corr/abs-1805-05201.html). Therefore, wired channels can be added and removed, as long as there exists a path of communication channels initialized by the algorithm[[2]](https://dblp.org/rec/journals/corr/abs-1805-05201.html).  
 
-\end{itemize}
 
 
 
@@ -135,7 +134,7 @@ First, launch the OMNeT++ IDE with the command:
 Second, see [here](http://wnss.sv.cmu.edu/teaching/14814/s15/files/hw2addendum.pdf) a guide written by Brian Ricks on how to import existing code within the Ecplise IDE.
 
 Third, the compilation of .msg files requires to add: in Project Explorer (left bar):
-> left clock on the project -> Properties -> OMNeT++ -> Makemake -> Options -> Custom -> add MSGC:=$(MSGC) --msg6 -> OK -> Apply and close.
+> left clock on the project -> Properties -> OMNeT++ -> Makemake -> Options -> Custom -> add MSGC:=*(MSGC) --msg6 -> OK -> Apply and close.
 
 ## How to run the simulation 
 
