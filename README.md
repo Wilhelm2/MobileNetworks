@@ -74,7 +74,7 @@ Wilhelm and al.[[4]](https://dl.acm.org/doi/10.1145/3491003.3491010) proposed a 
 * Implementation of host dynamics, ie hosts can join and leave the network during execution.
 * Decentralized deletion mechanism of obsolete messages by stations.
 
-The algorithm is not explained here in further details because it is quite difficult to understand. A detailed description can be found here [[4]](https://dl.acm.org/doi/10.1145/3491003.3491010).
+The algorithm is not explained here in further details because it is quite difficult to understand. A detailed description can be found here [[4]](https://dl.acm.org/doi/10.1145/3491003.3491010). 
 
 # OMNeT++
 
@@ -87,6 +87,8 @@ OMNeT++ uses the following specific files:
 2. **Network files:** Define modules as well as the simulation network which is composed of modules. Have the extension *.ned*.
 3. **Message files:** Define the messages used by nodes. Have the extension *.msg*.
 
+# INET 
+INET is a network simulator implemented on OMNeT++ [[5]](https://omnetpp.org/). INET offers an implementation of communication layers (e.g., TCP/UDP/Ethernet/IPv4/MAC), node mobility, node failures, and network interferences in wired and wireless networks. INET is used by importing it directly in OMNeT++ projects.
 
 # User guide 
 
@@ -95,7 +97,7 @@ This section first explains how to install the required resources to execute the
 ## OMNeT++ installation 
 
 The installation of the version 5.6.1 of OMNeT++ is explained [here](https://doc.omnetpp.org/omnetpp5/InstallGuide.pdf).
-Note that OMNeT++ is not (even though mostly) retrocompatible. 
+Note that OMNeT++ is not (even though mostly) retro-compatible. 
 Hence, some modifications might be required when using another version of OMNeT++. 
 Thus you should carefully install the version 5.6.1 of OMNeT++.
 
@@ -109,7 +111,10 @@ First, launch the OMNeT++ IDE with the command:
 Second, see [here](http://wnss.sv.cmu.edu/teaching/14814/s15/files/hw2addendum.pdf) a guide written by Brian Ricks on how to import existing code within the Ecplise IDE.
 
 Third, the compilation of .msg files requires to add: in Project Explorer (left bar):
-> left clock on the project -> Properties -> OMNeT++ -> Makemake -> Options -> Custom -> add MSGC:=*(MSGC) --msg6 -> OK -> Apply and close.
+> Left click on the project -> Properties -> OMNeT++ -> Makemake -> Options -> Custom -> add MSGC:=*(MSGC) --msg6 -> OK -> Apply and Close.
+
+Finally, *INET* must be added in the project references. 
+> Left click on the project -> Properties -> Project References -> check inet -> Apply and Close. 
 
 ## How to run the simulation 
 
@@ -121,33 +126,16 @@ To launch the simulation from the terminal:
 1. Open a terminal in the project directory
 2. Configure the files *omnetpp.ini* and *network.ned* following the desired simulation settings (number of nodes, control mechanism,...) 
 3. Execute the command: 
->../out/gcc-release/src/ErrorDetectors -f omnetpp.ini -u Cmdenv 
+>../out/gcc-release/src/MNwithStationFailures -f omnetpp.ini -u Cmdenv 
 
 The python script 'execution.py' is also provided. It builds the *.ini* and *.ned* files, launches the simulation, copies the simulation statistics in folders, and builds several graphs with those statistics.
 Configure the simulation parameters by modifying 'execution.py'. 
-
-The simulation parameter 'deliveryOption' determines the control mechanism used to deliver messages. The available control mechanisms are: 
-1. **No control** Nodes deliver messages upon reception without any control. 
-2. **Probabilistic clocks:** Nodes use Probabilistic clocks to causally order messages.
-3. **Probabilistic clock and the error detector of Mostéfaoui and Weiss:** Nodes use Probabilistic clocks to deliver messages, and execute the error detector proposed by Mostéfaoui and Weiss  [[3]](https://hal.science/hal-02056349/document) on messages before delivering them.
-4. **Probabilistic clock and an hash-based error detector using an average propagation delay hypothesis:** 
-Nodes use Probabilistic clocks to causally order messages, and execute an hash-based error detector proposed by Wilhelm and al.[[4]](https://hal.science/hal-03984499) on on messages before delivering them. The hash-based error detector uses the average propagation delay of messages to determine their causal relationship. 
-5. **Probabilistic clock and an hash-based error detector using the clock difference between messages:** Nodes use Probabilistic clocks to causally order messages, and execute an hash-based error detector proposed by Wilhelm and al.[[4]](https://hal.science/hal-03984499) on on messages before delivering them. The hash-based error detector uses the clock difference between messages to determine their causal relationship. 
-6. **Probabilistic clock, an hash-based error detector using the clock difference between messages, and the recovery of messages tagged as not causally ordered:**
-Nodes use Probabilistic clocks to causally order messages, and execute an hash-based error detector proposed by Wilhelm and al.[[4]](https://hal.science/hal-03984499) on on messages before delivering them. The hash-based error detector uses the average propagation delay of messages to determine their causal relationship. Moreover, nodes 
-recover the causal dependencies of the messages *m* for that the error detector tags as not causally ordered, by requesting the causal dependencies of *m* to the node that broadcasted *m*. Such a message is then delivered once the node delivered all of the message's causal dependencies.
-7. **Probabilistic clock, an hash-based error detector using the clock difference between messages, the recovery of messages tagged as not causally ordered, and a recovery test to avoid requesting the causal dependencies of messages:** Additionally to **6**, before requesting the causal dependencies of a message *m*, a node first tries to find the dependency set of *m* with messages that it did not deliver yet. 
 
 ## Data analysis
 
 Statistics about the simulation are collected and written in the *simulations/data* folder. 
 
 The folder *Graphs* contains python scripts to build graphs from those statistics. They are mainly written to be used from the 'execution.py' script, but can also be used outside of it. 
-
-## Documentation
-
-Detailled documentation can be found in the documentation folder, which is providing documentation under the PDF and html format. 
-Documentation has been written with [Doxygen](https://www.doxygen.nl/).
 
 # License
 
@@ -157,10 +145,10 @@ This project is distributed under the license GNU 3.0.
 
 <a id="HappenedBefore">[1]</a> Time, Clocks, and the Ordering of Events in a Distributed System. Lamport, Leslie. Communications of the ACM 1978.
 
-<a id="PC1">[2]</a> Probabilistic Causal Message Ordering. Mostéfaoui, Achour and Weiss, Stéphane. PaCT 2017.
+<a id="PC1">[2]</a> Breaking the Scalability Barrier of Causal Broadcast for Large and Dynamic Systems. Brice Nédelec, Pascal Molli, Achour Mostéfaoui. SRDS 2018.
 
-<a id="PC2">[3]</a> Probabilistic Causal Message Ordering. Mostéfaoui, Achour and Weiss, Stéphane. Technical report 2017.
+<a id="PC2">[3]</a> Causal Ordering in Deterministic Overlay Networks. Friedman, Roy and Manor, Shiri. Technical report 2004.
 
-<a id="PC">[4]</a> A probabilistic Dynamic Clock Set to capture message causality. Wilhelm, Daniel and Arantes, Luciana and Sens, Pierre. Technical report 2017.
+<a id="PC">[4]</a> A scalable causal broadcast that tolerates dynamics of mobile networks. Wilhelm, Daniel and Arantes, Luciana and Sens, Pierre. ICDCN 2022.
 
 <a id="OMNeT++">[5]</a> The OMNET++ Discrete Event Simulation System. Varga, Andras. ESM 2001.
