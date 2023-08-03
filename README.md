@@ -66,7 +66,18 @@ For example, in Figure 3.4, process A first broadcast a message m. After broadca
     <img src= "readmeFigures/FloodingDynamic.png?raw=true">
 </p>
 
-Wilhelm and al.[[4]](https://dl.acm.org/doi/10.1145/3491003.3491010) proposed a causal broadcast algorithm for mobile networks based on flooding through FIFO channels. This project implements that algorithm.
+Wilhelm and al.[[4]](https://dl.acm.org/doi/10.1145/3491003.3491010) proposed a causal broadcast algorithm for mobile networks based on flooding through FIFO channels. The proposed algorithm also takes into account the limited capacities of mobile networks. This project implements that algorithm. The main features of the implementation are:
+
+* Broadcast of application messages through flooding.
+* Handle host mobility between cells through a handoff procedure.
+* Most of the causal information is handled at stations to unload mobile hosts.
+* Implementation of host dynamics, ie hosts can join and leave the network during execution.
+* Decentralized deletion mechanism of obsolete messages by stations.
+
+The algorithm is not explained here in further details because it is quite difficult to understand. A detailled description can be found here [[4]](https://dl.acm.org/doi/10.1145/3491003.3491010).
+
+
+
 
 
 
