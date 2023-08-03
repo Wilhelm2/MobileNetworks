@@ -54,7 +54,7 @@ Friedman and Manor [[3]](https://www.researchgate.net/publication/228826549_Caus
 
 <p style="text-align: center;">
 ![Flooding CB](readmeFigures/FloodingCB.png?raw=true)
-<\p>
+</p>
 
 However, flooding over FIFO channels without additional control mechanism cannot ensure causal broadcast in networks in which communication channels can be added. 
 In fact, adding a new communication channel creates a shortcut over which processes
