@@ -52,7 +52,9 @@ The features of the network are the following:
 
 Friedman and Manor [[3]](https://www.researchgate.net/publication/228826549_Causal_Ordering_in_Deterministic_Overlay_Networks) first proposed an algorithm that ensures causal order through flooding in a static overlay network composed of FIFO communication channels. Flooding through FIFO channels ensures that no path exists over which messages travel out of causal order. For example, in Figure 3.3 A broadcasts m, which causally precedes m’ broadcasted by B. All processes receive m before m’ since upon reception all processes forward m on all their communication channels. Therefore, processes deliver messages upon reception, since they receive messages already causally ordered.
 
-<p align="center">![Flooding CB](readmeFigures/FloodingCB.png?raw=true)</p>
+<p align="center">
+    ![Flooding CB](readmeFigures/FloodingCB.png?raw=true)
+</p>
 
 However, flooding over FIFO channels without additional control mechanism cannot ensure causal broadcast in networks in which communication channels can be added. 
 In fact, adding a new communication channel creates a shortcut over which processes
