@@ -58,10 +58,15 @@ Friedman and Manor [[3]](https://www.researchgate.net/publication/228826549_Caus
 
 However, flooding over FIFO channels without additional control mechanism cannot ensure causal broadcast in networks in which communication channels can be added. 
 In fact, adding a new communication channel creates a shortcut over which processes
-can temporarily receive messages out of causal order. For example, in Figure 3.4, process A first broadcast a message m. After broadcasting m, it adds a new communication channel with C, then broadcasts m 0 . The path A − C is then a shortcut that m 0 can take, but shouldn’t till C receives and delivers m. The algorithms of does therefore not work in Mobile Networks. 
+can temporarily receive messages out of causal order.
 
-![Flooding Dynamic](readmeFigures/FloodingDynamic.png?raw=true)
+For example, in Figure 3.4, process A first broadcast a message m. After broadcasting m, it adds a new communication channel with C, then broadcasts m 0 . The path A − C is then a shortcut that m 0 can take, but shouldn’t till C receives and delivers m. The algorithms of does therefore not work in Mobile Networks. 
 
+<p align="center">
+    <img src= "readmeFigures/FloodingDynamic.png?raw=true">
+</p>
+
+Wilhelm and al.[[4]](https://dl.acm.org/doi/10.1145/3491003.3491010) proposed a causal broadcast algorithm for mobile networks based on flooding through FIFO channels. This project implements that algorithm.
 
 
 
