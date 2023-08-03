@@ -23,6 +23,7 @@ Causal order ensures that any two causally related messages are delivered to app
 
 We consider mobile networks composed of Mobile Hosts, denoted *host(s)*, and Static Support Stations, denoted *station(s)*.
 Hosts and stations exclusively communicate through message passing.
+
 Hosts are the sources and destinations of application messages, and stations ensure that hosts receive and deliver messages causally.
 
 ![Example of mobile network](readmeFigures/MobileNetworks.png?raw=true)
@@ -47,7 +48,17 @@ The features of the network are the following:
 * The wireless network is considered unreliable due to interferences. The bandwidth of the wireless network is much lower than the bandwidth of a wired network. Hosts communicate with stations exclusively through the wireless network.  
 * The wired network is composed of FIFO communication channels without message losses. Nevertheless, wired channels can fail. Moreover, stations communicate over the wired network by using the algorithm proposed by Mostéfaoui[[2]](https://dblp.org/rec/journals/corr/abs-1805-05201.html). Therefore, wired channels can be added and removed, as long as there exists a path of communication channels initialized by the algorithm[[2]](https://dblp.org/rec/journals/corr/abs-1805-05201.html).  
 
+# Principle of the algorithm
 
+Friedman and Manor [[3]](https://www.researchgate.net/publication/228826549_Causal_Ordering_in_Deterministic_Overlay_Networks) first proposed an algorithm that ensures causal order through flooding in a static overlay network composed of FIFO communication channels. Flooding through FIFO channels ensures that no path exists over which messages travel out of causal order. For example, in Figure 3.3 A broadcasts m, which causally precedes m’ broadcasted by B. All processes receive m before m’ since upon reception all processes forward m on all their communication channels. Therefore, processes deliver messages upon reception, since they receive messages already causally ordered.
+
+![Flooding CB](readmeFigures/FloodingCB.png?raw=true)
+
+However, flooding over FIFO channels without additional control mechanism cannot ensure causal broadcast in networks in which communication channels can be added. 
+In fact, adding a new communication channel creates a shortcut over which processes
+can temporarily receive messages out of causal order. For example, in Figure 3.4, process A first broadcast a message m. After broadcasting m, it adds a new communication channel with C, then broadcasts m 0 . The path A − C is then a shortcut that m 0 can take, but shouldn’t till C receives and delivers m. The algorithms of does therefore not work in Mobile Networks. 
+
+![Flooding Dynamic](readmeFigures/FloodingDynamic.png?raw=true)
 
 
 
