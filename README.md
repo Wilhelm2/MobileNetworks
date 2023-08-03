@@ -74,63 +74,7 @@ Wilhelm and al.[[4]](https://dl.acm.org/doi/10.1145/3491003.3491010) proposed a 
 * Implementation of host dynamics, ie hosts can join and leave the network during execution.
 * Decentralized deletion mechanism of obsolete messages by stations.
 
-The algorithm is not explained here in further details because it is quite difficult to understand. A detailled description can be found here [[4]](https://dl.acm.org/doi/10.1145/3491003.3491010).
-
-
-
-
-
-
-
-**The main features implemented by the project are:**
-1. Causal broadcast using **Probabilstic clocks** to causally order messages. 
-2. **Error detectors** whose purpose is to detect messages wrongly considered by Probabilistic clocks as causally ordered.
-3. **A procedure to recover** the causal dependencies of messages in order to ensure their delivery in causal order. 
-
-Those features are combined to provide 7 simulation settings described in Section. 
-
-## Error detectors
-
-This section briefly describes the error detectors implemented in this project. 
-
-The idea behind error detectors for Probabilistic clocks comes from the fact that such clocks might wrongly indicate that a message can be delivered in causal order. In other words, they might indicate that all of a message's causal dependencies have been delivered at a node while the node did actually not deliver some of them yet. 
-
-Error detectors for Probabilistic clocks aim to detect such messages.
-A node executes an error detector on a message *m* before delivering *m*. 
-An error detector can yield *false positives* as well as *false negatives*. 
-A *false positive* occurs when the error detector decides that a node did not deliver all of a message's causal dependencies while it actually did, i.e. the node can deliver the message in causal order. 
-Conversely, a *false negative* occurs when the error detector decides that a node delivered all of a message's causal dependencies while it actually did not, i.e. the node cannot yet deliver the message in causal order. 
-
-The two implemented error detectors are:
-1. Error detector proposed by Mostéfaoui and Weiss whose description can be found in [this paper](https://hal.science/hal-02056349/document)[3]. 
-2. Hash-based error detector proposed by Wilhelm and al. whose description can be found in [this paper](https://hal.science/hal-03984499)[4]. 
-The hash-based error detector sorts messages either based on reception times or the clock difference between messages. 
-
-The following figure describes the project's error detector class diagram:
-![Error Detector inheritance graph.](documentation/mainpage/errorDetectorInheritance.png?raw=true)
-
-## Recovery of message dependencies
-
-The project implements a procedure to request the causal dependencies of messages. It can notably be used by a node *p* to get the causal dependencies of a message *m* that its error detector considers as not causally ordered. After getting the dependencies of *m*, *p* can postpone the delivery of *m* till it delivered all of *m*'s causal dependencies, thus ensuring that it delivers *m* in causal order. 
-
-A detailled description of the recovery of message dependencies can be found in [this paper](https://hal.science/hal-03984499)[4].
-
-
-## Nodes 
-
-The features of this project are implemented inside Node classes. This section briefly describes these classes. 
-The following figure describes the project's Node class diagram: 
-![Error Detector inheritance graph.](documentation/mainpage/nodeInheritance.png?raw=true)
-
-A brief description of the Node classes:
-1. **NodeBase:** Base class to implement nodes. 
-2. **NodeNoControl:** Delivers a message upon reception without any control. 
-3. **NodeWithControl:** Base class of nodes that causally orders messages with Probabilistic clocks.
-4. **NodePC:** Causally orders messages with Probabilistic clocks and without using error detectors or message recovery. 
-5. **NodeDetector:** Base class of nodes that use error detectors to analyze messages before delivering them. 
-6. **NodeWithoutRecovery:** Uses error detectors to analyze messages before delivering them without recovering causal dependencies. 
-7. **NodeWithRecovery:** Uses erorr detectors to analyze messages before delivering them, recovers the causal dependencies of message tagged by the error detector as not causally ordered, and ensures their causal order delivery.
-8. **NodeWithRecoveryTest:** Uses the hash-based error detectors using clock differences. Additionnaly to **6**, before requering the causal dependencies of a message *m* tries to find the hash of *m* with messages that the node did not deliver yet. 
+The algorithm is not explained here in further details because it is quite difficult to understand. A detailed description can be found here [[4]](https://dl.acm.org/doi/10.1145/3491003.3491010).
 
 # OMNeT++
 
@@ -146,7 +90,7 @@ OMNeT++ uses the following specific files:
 
 # User guide 
 
-This section firt explains how to install the required ressources to execute the project. Then it shows how to import the project in the OMNeT++ built-in IDE based on Eclipse. Finally, it describes how to execute the simulation on the terminal.
+This section first explains how to install the required resources to execute the project. Then it shows how to import the project in the OMNeT++ built-in IDE based on Eclipse. Finally, it describes how to execute the simulation on the terminal.
 
 ## OMNeT++ installation 
 
@@ -192,7 +136,7 @@ Nodes use Probabilistic clocks to causally order messages, and execute an hash-b
 6. **Probabilistic clock, an hash-based error detector using the clock difference between messages, and the recovery of messages tagged as not causally ordered:**
 Nodes use Probabilistic clocks to causally order messages, and execute an hash-based error detector proposed by Wilhelm and al.[[4]](https://hal.science/hal-03984499) on on messages before delivering them. The hash-based error detector uses the average propagation delay of messages to determine their causal relationship. Moreover, nodes 
 recover the causal dependencies of the messages *m* for that the error detector tags as not causally ordered, by requesting the causal dependencies of *m* to the node that broadcasted *m*. Such a message is then delivered once the node delivered all of the message's causal dependencies.
-7. **Probabilistic clock, an hash-based error detector using the clock difference between messages, the recovery of messages tagged as not causally ordered, and a recovery test to avoid requesting the causal dependencies of messages:** Additionnally to **6**, before requesting the causal dependencies of a message *m*, a node first tries to find the dependency set of *m* with messages that it did not deliver yet. 
+7. **Probabilistic clock, an hash-based error detector using the clock difference between messages, the recovery of messages tagged as not causally ordered, and a recovery test to avoid requesting the causal dependencies of messages:** Additionally to **6**, before requesting the causal dependencies of a message *m*, a node first tries to find the dependency set of *m* with messages that it did not deliver yet. 
 
 ## Data analysis
 
